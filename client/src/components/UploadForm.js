@@ -55,7 +55,12 @@ const UplaodForm = () => {
       <ProgressBar percent={percent} />
       <div className="file-dropper">
         <label htmlFor="image">{fileName}</label>
-        <input id="image" type="file" onChange={imageSelectHandler} />
+        <input
+          id="image"
+          type="file"
+          onChange={imageSelectHandler}
+          accept="image/*"
+        />
       </div>
       <button type="submit" className="submit-btn">
         업로드
