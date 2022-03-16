@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import "./UploadForm.css";
 import { toast } from "material-react-toastify";
 import ProgressBar from "./ProgressBar";
+import { ImageContext } from "../context/ImageContext";
 
 const UplaodForm = () => {
+  const [images, setImages] = useContext(ImageContext);
   const defaultMsg = "이미지 파일을 업로드 해주세요.";
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(defaultMsg);
@@ -38,8 +40,11 @@ const UplaodForm = () => {
         },
       });
       console.log(res);
+      setImages([...images, res.data]);
       setTimeout(() => {
         setPercent(0);
+        setFileName(defaultMsg);
+        setImgSrc(null);
       }, 3000);
       toast.success("업로드 성공!");
     } catch (err) {
