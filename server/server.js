@@ -1,10 +1,21 @@
+require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const { v4: uuid } = require("uuid");
 const mime = require("mime-types");
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT = 5050;
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("mongodb connected!");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
