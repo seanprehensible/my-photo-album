@@ -9,12 +9,18 @@ const UplaodForm = () => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(defaultMsg);
   const [percent, setPercent] = useState(0);
+  const [imgSrc, setImgSrc] = useState(null);
 
   const imageSelectHandler = (event) => {
-    console.log(event);
+    // console.log(event);
     const imageFile = event.target.files[0];
     setFile(imageFile);
     setFileName(imageFile.name);
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(imageFile);
+    fileReader.onload = (e) => {
+      setImgSrc(e.target.result);
+    };
   };
 
   const onSubmitForm = async (e) => {
@@ -45,6 +51,7 @@ const UplaodForm = () => {
 
   return (
     <form onSubmit={onSubmitForm}>
+      {imgSrc && <img src={imgSrc} className="img-preview" />}
       <ProgressBar percent={percent} />
       <div className="file-dropper">
         <label htmlFor="image">{fileName}</label>
