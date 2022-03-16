@@ -4,6 +4,7 @@ const multer = require("multer");
 const { v4: uuid } = require("uuid");
 const mime = require("mime-types");
 const mongoose = require("mongoose");
+const Image = require("./models/Image");
 
 const app = express();
 const PORT = 5050;
@@ -41,12 +42,17 @@ const upload = multer({
 
 app.use("/uploads", express.static(__dirname + "/uploads")); // 정적 파일 제공
 
-app.get("/", (req, res) => {
-  res.send("hi");
+app.get("/images", async (req, res) => {
+  const images = await Image.find();
+  res.json(images);
 });
 
-app.post("/upload", upload.single("image"), (req, res) => {
-  res.json(req.file);
+app.post("/images", upload.single("image"), async (req, res) => {
+  const image = await new Image({
+    key: req.file.filename,
+    originalFileName: req.file.originalname,
+  }).save();
+  res.json(image);
   /*   {
     "fieldname": "image",
     "originalname": "520ABBB4-864C-4B1B-BAA8-5B383F39A839_1_105_c.jpeg",
