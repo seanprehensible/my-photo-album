@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const User = require("../models/User");
 const { hash, compare } = require("bcryptjs");
-const mongoose = require("mongoose");
 const userRouter = Router();
 
 userRouter.post("/register", async (req, res) => {
@@ -56,17 +55,13 @@ userRouter.patch("/login", async (req, res) => {
 
 userRouter.patch("/logout", async (req, res) => {
   try {
-    const { sessionid } = req.headers;
-    if (!mongoose.isValidObjectId(sessionid)) {
-      throw new Error("invalid sessionid! - 1");
-    }
-    const user = await User.findOne({ "session._id": sessionid });
-    if (!user) {
-      throw new Error("invalid sessionid! - 2");
+    console.log(req.user);
+    if (!req.user) {
+      throw new Error("invalid sessionid!");
     }
     await User.updateOne(
-      { _id: user.id },
-      { $pull: { sessions: { _id: sessionid } } }
+      { _id: req.user.id },
+      { $pull: { sessions: { _id: req.headers.sessionid } } }
     );
     res.json({ message: "successfully logged out!" });
   } catch (err) {
