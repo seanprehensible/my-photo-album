@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/User");
 const { hash, compare } = require("bcryptjs");
+const mongoose = require("mongoose");
 const userRouter = Router();
 
 userRouter.post("/register", async (req, res) => {
@@ -26,10 +27,12 @@ userRouter.post("/register", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    res.status(400).json({ message: err.message });
   }
 });
 
-userRouter.post("/login", async (req, res) => {
+// session을 수정해주는 일이라 patch로 설정
+userRouter.patch("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     const isValid = await compare(req.body.password, user.hashedPassword);
@@ -47,6 +50,28 @@ userRouter.post("/login", async (req, res) => {
     }
   } catch (err) {
     console.error(err);
+    res.status(400).json({ message: err.message });
+  }
+});
+
+userRouter.patch("/logout", async (req, res) => {
+  try {
+    const { sessionid } = req.headers;
+    if (!mongoose.isValidObjectId(sessionid)) {
+      throw new Error("invalid sessionid! - 1");
+    }
+    const user = await User.findOne({ "session._id": sessionid });
+    if (!user) {
+      throw new Error("invalid sessionid! - 2");
+    }
+    await User.updateOne(
+      { _id: user.id },
+      { $pull: { sessions: { _id: sessionid } } }
+    );
+    res.json({ message: "successfully logged out!" });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: err.message });
   }
 });
 
