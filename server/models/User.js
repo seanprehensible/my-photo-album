@@ -6,6 +6,11 @@ const UserSchema = new Schema(
     name: { type: String, require: true },
     username: { type: String, require: true, unique: true },
     hashedPassword: { type: String, require: true },
+    sessions: [
+      {
+        createdAt: { type: Date, require: true },
+      },
+    ],
   },
   {
     timestamps: true,
