@@ -1,12 +1,14 @@
 import { toast } from "material-react-toastify";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const [me, setMe] = useContext(AuthContext);
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -41,7 +43,9 @@ const RegisterPage = () => {
         username,
         password,
       });
-      console.log({ result });
+      const { userId, sessionId, name } = result.data;
+      console.log({ userId, sessionId, name });
+      setMe({ userId, sessionId, name });
       toast.success("회원가입 완료!");
     } catch (err) {
       console.error(err);

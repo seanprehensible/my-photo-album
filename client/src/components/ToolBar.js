@@ -1,18 +1,31 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const ToolBar = () => {
+  const [me, setMe] = useContext(AuthContext);
+
   return (
     <div style={{ padding: 10 }}>
       <Link to="/">
         <span>홈</span>
       </Link>
-      <Link to="/auth/register">
-        <span style={{ float: "right" }}>회원가입</span>
-      </Link>
-      <Link to="/auth/login">
-        <span style={{ float: "right", marginRight: 15 }}>로그인</span>
-      </Link>
+      {me ? (
+        <>
+          <Link to="/auth/register">
+            <span style={{ float: "right" }}>회원가입</span>
+          </Link>
+          <Link to="/auth/login">
+            <span style={{ float: "right", marginRight: 15 }}>로그인</span>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link to="/auth/logout">
+            <span style={{ float: "right" }}>로그아웃</span>
+          </Link>
+        </>
+      )}
     </div>
   );
 };
