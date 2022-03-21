@@ -2,13 +2,15 @@ import { toast } from "material-react-toastify";
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [me, setMe] = useContext(AuthContext);
+  const [, setMe] = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -48,6 +50,7 @@ const RegisterPage = () => {
         sessionId: result.data.sessionId,
         name: result.data.name,
       });
+      navigate("/");
       toast.success("회원가입 완료!");
     } catch (err) {
       console.error(err);

@@ -34,8 +34,14 @@ const ToolBar = () => {
         </>
       ) : (
         <>
-          <span style={{ float: "right" }} onClick={logoutHandler}>
+          <span
+            style={{ float: "right", cursor: "pointer" }}
+            onClick={logoutHandler}
+          >
             로그아웃
+          </span>
+          <span style={{ float: "right", marginRight: 15, fontWeight: "bold" }}>
+            {me.name}
           </span>
         </>
       )}
