@@ -1,3 +1,5 @@
+import axios from "axios";
+import { toast } from "material-react-toastify";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -5,12 +7,23 @@ import { AuthContext } from "../context/AuthContext";
 const ToolBar = () => {
   const [me, setMe] = useContext(AuthContext);
 
+  const logoutHandler = async () => {
+    try {
+      await axios.patch("/users/logout");
+      setMe();
+      toast.success("로그아웃 완료!");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message);
+    }
+  };
+
   return (
     <div style={{ padding: 10 }}>
       <Link to="/">
         <span>홈</span>
       </Link>
-      {me ? (
+      {!me ? (
         <>
           <Link to="/auth/register">
             <span style={{ float: "right" }}>회원가입</span>
@@ -21,9 +34,9 @@ const ToolBar = () => {
         </>
       ) : (
         <>
-          <Link to="/auth/logout">
-            <span style={{ float: "right" }}>로그아웃</span>
-          </Link>
+          <span style={{ float: "right" }} onClick={logoutHandler}>
+            로그아웃
+          </span>
         </>
       )}
     </div>

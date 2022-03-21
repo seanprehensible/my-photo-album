@@ -43,9 +43,11 @@ const RegisterPage = () => {
         username,
         password,
       });
-      const { userId, sessionId, name } = result.data;
-      console.log({ userId, sessionId, name });
-      setMe({ userId, sessionId, name });
+      setMe({
+        userId: result.data.userId,
+        sessionId: result.data.sessionId,
+        name: result.data.name,
+      });
       toast.success("회원가입 완료!");
     } catch (err) {
       console.error(err);
@@ -97,11 +99,11 @@ const RegisterPage = () => {
           />
         </div>
         <div style={{ marginBottom: 10 }}>
-          <label htmlFor="password" style={{ display: "block" }}>
+          <label htmlFor="password-check" style={{ display: "block" }}>
             비밀번호 확인
           </label>
           <input
-            id="password"
+            id="password-check"
             type="password"
             value={passwordCheck}
             onChange={onChangePasswordCheck}
