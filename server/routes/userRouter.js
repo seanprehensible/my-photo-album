@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const User = require("../models/User");
+const Image = require("../models/Image");
 const { hash, compare } = require("bcryptjs");
 const userRouter = Router();
 
@@ -86,6 +87,20 @@ userRouter.get("/me", (req, res) => {
       name: req.user.name,
       userId: req.user._id,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ message: err.message });
+  }
+});
+
+userRouter.get("/me/images", async (req, res) => {
+  // private 사진들만 리턴
+  try {
+    if (!req.user) {
+      throw new Error("권한이 없습니다.");
+    }
+    const images = await Image.find({ "user._id": req.user.id });
+    res.json(images);
   } catch (err) {
     console.error(err);
     res.status(400).json({ message: err.message });
