@@ -53,8 +53,8 @@ const RegisterPage = () => {
       navigate("/");
       toast.success("회원가입 완료!");
     } catch (err) {
-      console.error(err);
-      toast.error(err.message);
+      console.error(err.response);
+      toast.error(err.response.data.message);
     }
   };
 
